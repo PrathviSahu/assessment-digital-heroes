@@ -15,7 +15,7 @@
     "security",
     "performance"
   ],
-  "author": "",
+  "author": "Prathvi Sahu",
   "license": "MIT",
   "dependencies": {
     "axios": "^1.6.8",
