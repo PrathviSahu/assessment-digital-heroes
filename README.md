@@ -6,13 +6,42 @@ Page Pulse is a production-grade URL auditing engine and web dashboard that anal
 
 ---
 
+## 📸 Dashboard & Interface Highlights
+
+```text
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ ⚡ Page Pulse SDE Task                                 🟢 System Ready      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Run URL Audit                                                              │
+│  [ https://google.com                    ] [ ⚡ Audit Target ]               │
+│  [x] Bypass Cache   Quick test: [google.com] [github.com] [404 Test]        │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  🏆 95/100 Excellent                                                        │
+│  Overall Page Pulse Health Index  │ 🛡️ Sec: 32/40 │ ⚡ Speed: 30/30 │ 🔍 SEO: 30/30│
+├─────────────────────────────────────────────────────────────────────────────┤
+│  https://google.com               HTTP 200 OK           Cache HIT           │
+│  ⚡ TTFB: 142 ms  │ ⏱️ Total: 310 ms │ 📦 Size: 12.5 KB │ 🆔 req_9a4f21    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  🛡️ Security Headers                │ 🔍 SEO Metadata                       │
+│  ✓ HSTS Enabled                     │ Title: Google                         │
+│  ✗ CSP Missing                      │ Meta Desc: Search the world's info... │
+│  ✓ X-Frame-Options Enabled          │ Canonical: https://www.google.com/    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Built for Digital Heroes Training Task (https://digitalheroesco.com)       │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## 🌟 Key Features
 
 - **Input Validation & SSRF Security**: Zod schema validation paired with an IP blocklist filter (`127.0.0.1`, `10.x.x.x`, `169.254.x.x` AWS metadata) to block Server-Side Request Forgery attempts.
 - **Resilience & Concurrency Control**: Strict 5-second `AbortController` timeouts and in-process concurrency limiting to prevent socket pool exhaustion.
 - **Configurable TTL Caching**: In-memory caching (`node-cache`) returning instantaneous responses (`X-Cache: HIT`) for duplicate audit requests within a configurable time window.
 - **Rate Limiting & Request Tracing**: Per-client IP rate limiting (60 req/15 min) with unique UUID `requestId` propagation across logs and API headers.
-- **Interactive UI Dashboard**: Modern dark-mode glassmorphism interface featuring quick-test URL chips, speed gauges, security scorecard badges, raw JSON inspection, and the mandatory credit link to `digitalheroesco.com`.
+- **Lighthouse Health Index (0-100)**: Calculates an overall health score with grade ratings (`Excellent`, `Good`, `Needs Improvement`) across Security, Speed, and SEO.
+- **Step-by-Step Progress Animation**: Real-time visual progress bar tracking DNS checks, HTTP requests, header inspection, and health index calculation.
+- **Interactive UI Dashboard**: Modern dark-mode glassmorphism interface featuring quick-test URL chips, color-coded metric thresholds, raw JSON inspection, and mandatory credit link to `digitalheroesco.com`.
 - **Automated Testing & CI**: Comprehensive Jest integration test suite and GitHub Actions CI workflow.
 
 ---
@@ -73,6 +102,16 @@ Initiates a URL performance, security, and SEO audit.
     "statusCode": 200,
     "statusText": "OK",
     "isSuccess": true,
+    "score": {
+      "total": 95,
+      "rating": "Excellent",
+      "badgeColor": "green",
+      "breakdown": {
+        "security": 32,
+        "performance": 30,
+        "seo": 33
+      }
+    },
     "metrics": {
       "ttfbMs": 142,
       "totalTimeMs": 310,
@@ -94,7 +133,8 @@ Initiates a URL performance, security, and SEO audit.
     "auditedAt": "2026-07-24T19:00:00.000Z",
     "cached": false,
     "requestId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
-  }
+  },
+  "requestId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
 }
 ```
 
@@ -121,14 +161,6 @@ Initiates a URL performance, security, and SEO audit.
 
 ---
 
-## 🤖 AI Usage Disclosure
-
-*Per Digital Heroes Task Kit guidelines:*
-
-> AI tools (Gemini / Antigravity AI) were directed throughout this project to accelerate repetitive code generation, structure unit test scaffolding, and format markdown documentation. All underlying architectural decisions—including SSRF IP filtering, concurrency limiting, TTL cache window selection, ADR trade-off reasoning, and failure mode mitigations—were human-directed, reviewed, and verified for accuracy.
-
----
-
 ## 🎯 Interview Defense Cheatsheet
 
 Be prepared for these technical questions during your interview:
@@ -144,6 +176,14 @@ Be prepared for these technical questions during your interview:
 
 4. **Q: How does the in-memory cache transition to a multi-server architecture?**
    - *Answer*: The `cacheService` module is abstracted behind a generic interface (`get`, `set`, `flush`). In single-instance deployments, `node-cache` provides sub-millisecond local speed. In multi-instance cluster deployments, swapping `node-cache` for `ioredis` requires zero changes to core audit logic.
+
+---
+
+## 🤖 AI Usage Disclosure
+
+*Per Digital Heroes Task Kit guidelines:*
+
+> AI tools (Gemini / Antigravity AI) were directed throughout this project to accelerate repetitive code generation, structure unit test scaffolding, and format markdown documentation. All underlying architectural decisions—including SSRF IP filtering, concurrency limiting, TTL cache window selection, ADR trade-off reasoning, and failure mode mitigations—were human-directed, reviewed, and verified for accuracy.
 
 ---
 
