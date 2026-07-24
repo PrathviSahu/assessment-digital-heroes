@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('resUrl').textContent = data.targetUrl;
     document.getElementById('resTimestamp').textContent = new Date(data.auditedAt).toLocaleString();
 
-    // Health Score Hero Card
+    // Health Score Hero Card & Micro Progress Bars
     if (data.score) {
       document.getElementById('heroScoreNum').textContent = data.score.total;
       document.getElementById('heroScoreRating').textContent = data.score.rating;
@@ -141,9 +141,29 @@ document.addEventListener('DOMContentLoaded', () => {
       const circle = document.getElementById('scoreCircle');
       circle.className = `score-circle ${data.score.badgeColor}`;
 
-      document.getElementById('scoreSec').textContent = `${data.score.breakdown.security}/40`;
-      document.getElementById('scorePerf').textContent = `${data.score.breakdown.performance}/30`;
-      document.getElementById('scoreSeo').textContent = `${data.score.breakdown.seo}/30`;
+      // Security Bar
+      const secPts = data.score.breakdown.security;
+      const secPct = (secPts / 40) * 100;
+      document.getElementById('scoreSec').textContent = `${secPts}/40`;
+      const barSec = document.getElementById('barSecFill');
+      barSec.style.width = `${secPct}%`;
+      barSec.className = `score-mini-fill ${secPct >= 75 ? 'green' : (secPct >= 40 ? 'yellow' : 'red')}`;
+
+      // Speed Bar
+      const perfPts = data.score.breakdown.performance;
+      const perfPct = (perfPts / 30) * 100;
+      document.getElementById('scorePerf').textContent = `${perfPts}/30`;
+      const barPerf = document.getElementById('barPerfFill');
+      barPerf.style.width = `${perfPct}%`;
+      barPerf.className = `score-mini-fill ${perfPct >= 75 ? 'green' : (perfPct >= 40 ? 'yellow' : 'red')}`;
+
+      // SEO Bar
+      const seoPts = data.score.breakdown.seo;
+      const seoPct = (seoPts / 30) * 100;
+      document.getElementById('scoreSeo').textContent = `${seoPts}/30`;
+      const barSeo = document.getElementById('barSeoFill');
+      barSeo.style.width = `${seoPct}%`;
+      barSeo.className = `score-mini-fill ${seoPct >= 75 ? 'green' : (seoPct >= 40 ? 'yellow' : 'red')}`;
     }
 
     // Status Tag

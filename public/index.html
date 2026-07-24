@@ -12,10 +12,28 @@
 </head>
 <body>
   <div class="app-container">
-    <!-- Header -->
+    <!-- Header with Custom Brand Logo -->
     <header class="header">
       <div class="brand">
-        <div class="logo-icon">⚡</div>
+        <div class="logo-box">
+          <svg class="brand-logo-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="40" height="40" rx="10" fill="url(#logo-grad)" fill-opacity="0.2"/>
+            <rect width="39" height="39" x="0.5" y="0.5" rx="9.5" stroke="url(#logo-stroke)" stroke-opacity="0.5"/>
+            <!-- Pulse Wave Path -->
+            <path d="M7 21H13L16 11L21 29L25 17L28 21H33" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="21" cy="29" r="2" fill="#3b82f6"/>
+            <defs>
+              <linearGradient id="logo-grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#3b82f6"/>
+                <stop offset="1" stop-color="#06b6d4"/>
+              </linearGradient>
+              <linearGradient id="logo-stroke" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#60a5fa"/>
+                <stop offset="1" stop-color="#22d3ee"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
         <div class="brand-text">
           <h1>Page Pulse <span class="badge">SDE Task</span></h1>
           <p class="subtitle">Production-Grade URL Audit & Performance Engine</p>
@@ -77,27 +95,46 @@
         <!-- Hero Health Score Card -->
         <div class="card hero-score-card">
           <div class="hero-score-left">
-            <div class="score-circle" id="scoreCircle">
+            <div class="score-circle green" id="scoreCircle">
               <span class="score-number" id="heroScoreNum">95</span>
-              <span class="score-max">/100</span>
+              <span class="score-max">/ 100</span>
             </div>
             <div class="score-label-group">
               <h3 id="heroScoreRating">Excellent</h3>
               <p class="score-subtext">Overall Page Pulse Health Index</p>
             </div>
           </div>
+
+          <!-- Visual Progress Bars Breakdown -->
           <div class="score-breakdown-right">
-            <div class="score-pill">
-              <span class="pill-title">🛡️ Security</span>
-              <span class="pill-score" id="scoreSec">32/40</span>
+            <div class="score-bar-item">
+              <div class="score-bar-header">
+                <span>🛡️ Security</span>
+                <strong id="scoreSec">32/40</strong>
+              </div>
+              <div class="score-mini-track">
+                <div class="score-mini-fill green" id="barSecFill" style="width: 80%;"></div>
+              </div>
             </div>
-            <div class="score-pill">
-              <span class="pill-title">⚡ Speed</span>
-              <span class="pill-score" id="scorePerf">30/30</span>
+
+            <div class="score-bar-item">
+              <div class="score-bar-header">
+                <span>⚡ Speed</span>
+                <strong id="scorePerf">30/30</strong>
+              </div>
+              <div class="score-mini-track">
+                <div class="score-mini-fill green" id="barPerfFill" style="width: 100%;"></div>
+              </div>
             </div>
-            <div class="score-pill">
-              <span class="pill-title">🔍 SEO</span>
-              <span class="pill-score" id="scoreSeo">30/30</span>
+
+            <div class="score-bar-item">
+              <div class="score-bar-header">
+                <span>🔍 SEO</span>
+                <strong id="scoreSeo">30/30</strong>
+              </div>
+              <div class="score-mini-track">
+                <div class="score-mini-fill green" id="barSeoFill" style="width: 100%;"></div>
+              </div>
             </div>
           </div>
         </div>
