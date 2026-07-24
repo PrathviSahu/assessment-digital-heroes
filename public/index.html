@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Pulse | Production URL Audit Service</title>
+  <meta name="description" content="Production-grade URL audit engine delivering real-time performance metrics, security header analysis, and SEO inspection.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="logo-icon">⚡</div>
+        <div class="brand-text">
+          <h1>Page Pulse <span class="badge">SDE Task</span></h1>
+          <p class="subtitle">Production-Grade URL Audit & Performance Engine</p>
+        </div>
+      </div>
+      <div class="system-status" id="systemStatus">
+        <span class="status-dot online"></span>
+        <span class="status-text">System Ready</span>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Audit Request Panel -->
+      <section class="card audit-card">
+        <h2>Run URL Audit</h2>
+        <form id="auditForm" class="audit-form">
+          <div class="input-group">
+            <input 
+              type="url" 
+              id="urlInput" 
+              placeholder="https://example.com" 
+              required 
+              autocomplete="off"
+            />
+            <button type="submit" id="submitBtn" class="btn primary-btn">
+              <span class="btn-text">Audit Target</span>
+              <span class="spinner hidden"></span>
+            </button>
+          </div>
+          
+          <div class="options-bar">
+            <label class="checkbox-label">
+              <input type="checkbox" id="ignoreCache" />
+              <span>Bypass Cache</span>
+            </label>
+
+            <div class="quick-samples">
+              <span class="sample-label">Quick test:</span>
+              <button type="button" class="chip" data-url="https://google.com">google.com</button>
+              <button type="button" class="chip" data-url="https://github.com">github.com</button>
+              <button type="button" class="chip" data-url="https://httpbin.org/status/404">404 Test</button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- Results Area -->
+      <section id="resultsSection" class="results-section hidden">
+        <!-- Overview Banner -->
+        <div class="card result-banner">
+          <div class="result-header">
+            <div>
+              <span class="url-display" id="resUrl">-</span>
+              <span class="timestamp" id="resTimestamp">-</span>
+            </div>
+            <div class="badges">
+              <span class="status-tag" id="resStatusTag">-</span>
+              <span class="cache-tag" id="resCacheTag">-</span>
+            </div>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <span class="metric-label">TTFB (First Byte)</span>
+              <span class="metric-value" id="resTTFB">-</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Total Load Time</span>
+              <span class="metric-value" id="resTotalTime">-</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Content Size</span>
+              <span class="metric-value" id="resSize">-</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Request ID</span>
+              <span class="metric-value mono" id="resRequestId">-</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Breakdown Grid -->
+        <div class="grid-2col">
+          <!-- Security Headers Scorecard -->
+          <div class="card">
+            <h3>🛡️ Security Headers Check</h3>
+            <ul class="check-list" id="securityList">
+              <!-- Dynamically Populated -->
+            </ul>
+          </div>
+
+          <!-- SEO & Metadata -->
+          <div class="card">
+            <h3>🔍 Basic SEO Metadata</h3>
+            <div class="meta-item">
+              <span class="meta-label">Title Tag</span>
+              <p class="meta-value" id="resTitle">-</p>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Meta Description</span>
+              <p class="meta-value" id="resMetaDesc">-</p>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Canonical Link</span>
+              <p class="meta-value mono" id="resCanonical">-</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Raw JSON Inspector -->
+        <div class="card">
+          <div class="card-header">
+            <h3>📜 Raw Response Contract</h3>
+            <button id="copyJsonBtn" class="btn secondary-btn sm">Copy JSON</button>
+          </div>
+          <pre><code id="jsonCode" class="json-code"></code></pre>
+        </div>
+      </section>
+
+      <!-- Error Box -->
+      <div id="errorBox" class="card error-card hidden">
+        <div class="error-header">
+          <span class="error-icon">⚠️</span>
+          <h3 id="errorTitle">Audit Error</h3>
+        </div>
+        <p id="errorMessage" class="error-msg"></p>
+        <span id="errorReqId" class="error-req-id"></span>
+      </div>
+    </main>
+
+    <!-- Footer with MANDATORY Credit Line -->
+    <footer class="footer">
+      <p class="credit-line">
+        Built for <a href="https://digitalheroesco.com" target="_blank" rel="noopener noreferrer" class="credit-link">Digital Heroes Training Task</a>
+      </p>
+      <p class="tech-stack">Powered by Node.js, Express & Page Pulse Audit Engine</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
