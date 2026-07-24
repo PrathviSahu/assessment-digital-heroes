@@ -37,6 +37,48 @@ class ConcurrencyLimiter {
 
 const limiter = new ConcurrencyLimiter(10);
 
+// Health Score Calculator (0 - 100)
+const calculateHealthScore = ({ ttfbMs, securityHeaders, seo }) => {
+  // 1. Security Score (40 pts max)
+  let secPts = 0;
+  if (securityHeaders.hsts) secPts += 8;
+  if (securityHeaders.csp) secPts += 8;
+  if (securityHeaders.xFrameOptions) secPts += 8;
+  if (securityHeaders.contentTypeOptions) secPts += 8;
+  if (securityHeaders.referrerPolicy) secPts += 8;
+
+  // 2. Performance Score (30 pts max)
+  let perfPts = 0;
+  if (ttfbMs < 200) perfPts = 30;
+  else if (ttfbMs <= 500) perfPts = 20;
+  else if (ttfbMs <= 1000) perfPts = 10;
+  else perfPts = 0;
+
+  // 3. SEO Score (30 pts max)
+  let seoPts = 0;
+  if (seo.title) seoPts += 10;
+  if (seo.metaDescription) seoPts += 10;
+  if (seo.canonicalUrl) seoPts += 10;
+
+  const total = secPts + perfPts + seoPts;
+
+  let rating = 'Needs Improvement';
+  let badgeColor = 'red';
+  if (total >= 85) { rating = 'Excellent'; badgeColor = 'green'; }
+  else if (total >= 65) { rating = 'Good'; badgeColor = 'yellow'; }
+
+  return {
+    total,
+    rating,
+    badgeColor,
+    breakdown: {
+      security: secPts,
+      performance: perfPts,
+      seo: seoPts
+    }
+  };
+};
+
 const performUrlAudit = async ({ url, timeoutMs = 5000, ignoreCache = false, requestId }) => {
   const cacheKey = `audit:${url}`;
 
@@ -105,13 +147,21 @@ const performUrlAudit = async ({ url, timeoutMs = 5000, ignoreCache = false, req
         if (canonicalMatch) canonicalUrl = canonicalMatch[1].trim();
       }
 
+      const ttfbMs = ttfb || totalTimeMs;
+      const score = calculateHealthScore({
+        ttfbMs,
+        securityHeaders,
+        seo: { title, metaDescription, canonicalUrl }
+      });
+
       const auditResult = {
         targetUrl: url,
         statusCode: response.status,
         statusText: response.statusText,
         isSuccess: response.status >= 200 && response.status < 400,
+        score,
         metrics: {
-          ttfbMs: ttfb || totalTimeMs,
+          ttfbMs,
           totalTimeMs,
           contentLengthBytes: Buffer.byteLength(bodyText, 'utf8'),
           contentType: headers['content-type'] || 'unknown'

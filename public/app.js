@@ -6,6 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnText = submitBtn.querySelector('.btn-text');
   const spinner = submitBtn.querySelector('.spinner');
 
+  const progressBox = document.getElementById('progressBox');
+  const progressStepText = document.getElementById('progressStepText');
+  const progressBarFill = document.getElementById('progressBarFill');
+
   const resultsSection = document.getElementById('resultsSection');
   const errorBox = document.getElementById('errorBox');
   const copyJsonBtn = document.getElementById('copyJsonBtn');
@@ -18,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Handle Form Submit
+  // Handle Form Submit with Step Animation
   auditForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const url = urlInput.value.trim();
@@ -27,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setLoading(true);
     hideResults();
     hideError();
+    startProgressAnimation();
 
     try {
       const response = await fetch('/api/v1/audit', {
@@ -52,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       showError('NETWORK_ERROR', `Failed to connect to audit server: ${err.message}`);
     } finally {
+      stopProgressAnimation();
       setLoading(false);
     }
   });
@@ -75,6 +81,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  let progressInterval;
+  function startProgressAnimation() {
+    progressBox.classList.remove('hidden');
+    const steps = [
+      { text: '🔍 Validating URL & Checking SSRF Blocklist...', percent: 20 },
+      { text: '🌐 Resolving Host & Connecting to Target...', percent: 45 },
+      { text: '⏱️ Measuring TTFB & Downloading Content Payload...', percent: 70 },
+      { text: '🛡️ Inspecting Security Headers & SEO Metadata...', percent: 90 },
+      { text: '⚡ Calculating Health Index...', percent: 98 }
+    ];
+
+    let currentStep = 0;
+    progressStepText.textContent = steps[0].text;
+    progressBarFill.style.width = `${steps[0].percent}%`;
+
+    progressInterval = setInterval(() => {
+      currentStep++;
+      if (currentStep < steps.length) {
+        progressStepText.textContent = steps[currentStep].text;
+        progressBarFill.style.width = `${steps[currentStep].percent}%`;
+      }
+    }, 400);
+  }
+
+  function stopProgressAnimation() {
+    clearInterval(progressInterval);
+    progressBarFill.style.width = '100%';
+    setTimeout(() => {
+      progressBox.classList.add('hidden');
+      progressBarFill.style.width = '0%';
+    }, 300);
+  }
+
   function hideResults() {
     resultsSection.classList.add('hidden');
   }
@@ -94,6 +133,19 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('resUrl').textContent = data.targetUrl;
     document.getElementById('resTimestamp').textContent = new Date(data.auditedAt).toLocaleString();
 
+    // Health Score Hero Card
+    if (data.score) {
+      document.getElementById('heroScoreNum').textContent = data.score.total;
+      document.getElementById('heroScoreRating').textContent = data.score.rating;
+      
+      const circle = document.getElementById('scoreCircle');
+      circle.className = `score-circle ${data.score.badgeColor}`;
+
+      document.getElementById('scoreSec').textContent = `${data.score.breakdown.security}/40`;
+      document.getElementById('scorePerf').textContent = `${data.score.breakdown.performance}/30`;
+      document.getElementById('scoreSeo').textContent = `${data.score.breakdown.seo}/30`;
+    }
+
     // Status Tag
     const statusTag = document.getElementById('resStatusTag');
     statusTag.textContent = `HTTP ${data.statusCode} ${data.statusText}`;
@@ -104,9 +156,17 @@ document.addEventListener('DOMContentLoaded', () => {
     cacheTag.textContent = data.cached ? 'Cache HIT' : 'Cache MISS';
     cacheTag.className = `cache-tag ${data.cached ? 'hit' : 'miss'}`;
 
-    // Metrics
-    document.getElementById('resTTFB').textContent = `${data.metrics.ttfbMs} ms`;
-    document.getElementById('resTotalTime').textContent = `${data.metrics.totalTimeMs} ms`;
+    // Color-Coded Metrics
+    const ttfbCard = document.getElementById('cardTTFB');
+    const ttfbVal = data.metrics.ttfbMs;
+    document.getElementById('resTTFB').textContent = `${ttfbVal} ms`;
+    ttfbCard.className = `metric-card ${ttfbVal < 200 ? 'good' : (ttfbVal <= 500 ? 'warn' : 'bad')}`;
+
+    const totalCard = document.getElementById('cardTotalTime');
+    const totalVal = data.metrics.totalTimeMs;
+    document.getElementById('resTotalTime').textContent = `${totalVal} ms`;
+    totalCard.className = `metric-card ${totalVal < 500 ? 'good' : (totalVal <= 1000 ? 'warn' : 'bad')}`;
+
     document.getElementById('resSize').textContent = `${(data.metrics.contentLengthBytes / 1024).toFixed(2)} KB`;
     document.getElementById('resRequestId').textContent = data.requestId || 'N/A';
 

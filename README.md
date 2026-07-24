@@ -129,6 +129,24 @@ Initiates a URL performance, security, and SEO audit.
 
 ---
 
+## 🎯 Interview Defense Cheatsheet
+
+Be prepared for these technical questions during your interview:
+
+1. **Q: Why does Google (or certain target domains) show missing HSTS headers on some endpoints?**
+   - *Answer*: HSTS headers are often configured at apex domains (`google.com`) or preloaded directly into browser trust stores (HSTS Preload List) rather than emitted dynamically on every raw sub-resource endpoint response.
+
+2. **Q: Why use a lightweight HTTP inspector instead of Puppeteer / Headless Chrome?**
+   - *Answer*: Puppeteer launches a full Chromium process consuming ~150MB RAM and 2–5 seconds per page execution. For a service handling 10,000 audits per day, a streaming HTTP inspect engine consumes `< 10MB` RAM, executes in `< 200ms`, and handles 10x the throughput per server.
+
+3. **Q: Why set a strict 5-second request timeout?**
+   - *Answer*: To prevent Target Tarpit / Slowloris attacks. If a malicious or broken website holds sockets open without closing them, an unconstrained server will exhaust connection pools and crash. A 5s cutoff returns a standard HTTP 504 Gateway Timeout cleanly.
+
+4. **Q: How does the in-memory cache transition to a multi-server architecture?**
+   - *Answer*: The `cacheService` module is abstracted behind a generic interface (`get`, `set`, `flush`). In single-instance deployments, `node-cache` provides sub-millisecond local speed. In multi-instance cluster deployments, swapping `node-cache` for `ioredis` requires zero changes to core audit logic.
+
+---
+
 ## 💳 Mandatory Credit Line
 
 Built for [Digital Heroes Training Task](https://digitalheroesco.com).

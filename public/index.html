@@ -60,11 +60,48 @@
               <button type="button" class="chip" data-url="https://httpbin.org/status/404">404 Test</button>
             </div>
           </div>
+
+          <!-- Audit Progress Step Animation -->
+          <div id="progressBox" class="progress-box hidden">
+            <div class="progress-step-text" id="progressStepText">Checking DNS & Schema...</div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
+          </div>
         </form>
       </section>
 
       <!-- Results Area -->
       <section id="resultsSection" class="results-section hidden">
+        
+        <!-- Hero Health Score Card -->
+        <div class="card hero-score-card">
+          <div class="hero-score-left">
+            <div class="score-circle" id="scoreCircle">
+              <span class="score-number" id="heroScoreNum">95</span>
+              <span class="score-max">/100</span>
+            </div>
+            <div class="score-label-group">
+              <h3 id="heroScoreRating">Excellent</h3>
+              <p class="score-subtext">Overall Page Pulse Health Index</p>
+            </div>
+          </div>
+          <div class="score-breakdown-right">
+            <div class="score-pill">
+              <span class="pill-title">🛡️ Security</span>
+              <span class="pill-score" id="scoreSec">32/40</span>
+            </div>
+            <div class="score-pill">
+              <span class="pill-title">⚡ Speed</span>
+              <span class="pill-score" id="scorePerf">30/30</span>
+            </div>
+            <div class="score-pill">
+              <span class="pill-title">🔍 SEO</span>
+              <span class="pill-score" id="scoreSeo">30/30</span>
+            </div>
+          </div>
+        </div>
+
         <!-- Overview Banner -->
         <div class="card result-banner">
           <div class="result-header">
@@ -78,21 +115,22 @@
             </div>
           </div>
 
+          <!-- Color Coded Metrics Grid -->
           <div class="metrics-grid">
-            <div class="metric-card">
-              <span class="metric-label">TTFB (First Byte)</span>
+            <div class="metric-card" id="cardTTFB">
+              <span class="metric-label">⚡ TTFB (First Byte)</span>
               <span class="metric-value" id="resTTFB">-</span>
             </div>
-            <div class="metric-card">
-              <span class="metric-label">Total Load Time</span>
+            <div class="metric-card" id="cardTotalTime">
+              <span class="metric-label">⏱️ Total Load Time</span>
               <span class="metric-value" id="resTotalTime">-</span>
             </div>
             <div class="metric-card">
-              <span class="metric-label">Content Size</span>
+              <span class="metric-label">📦 Content Size</span>
               <span class="metric-value" id="resSize">-</span>
             </div>
             <div class="metric-card">
-              <span class="metric-label">Request ID</span>
+              <span class="metric-label">🆔 Request ID</span>
               <span class="metric-value mono" id="resRequestId">-</span>
             </div>
           </div>
@@ -129,7 +167,7 @@
         <!-- Raw JSON Inspector -->
         <div class="card">
           <div class="card-header">
-            <h3>📜 Raw Response Contract</h3>
+            <h3>📋 Raw Response Contract</h3>
             <button id="copyJsonBtn" class="btn secondary-btn sm">Copy JSON</button>
           </div>
           <pre><code id="jsonCode" class="json-code"></code></pre>
